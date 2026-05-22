@@ -1,3 +1,30 @@
+resource "aws_iam_role" "jenkins_ssm_role" {
+  name = "devops-project-jenkins-ssm-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Princioal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "jenkins_ssm_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role = aws_iam_role.jenkins_ssm_role.name
+}
+
+resource "aws_iam_instance_profile" "jenkins_ssm_profile" {
+  name = "devops-projrct-jenkins-ssm-profile"
+  role = aws_iam_role.jenkins_ssm_role.name
+}
+
 resource "aws_security_group" "jenkins_sg" {
   name = "jenkins-server-sg"
   description = "Allow web and SSH traffic to jenkins"
@@ -44,4 +71,9 @@ resource "aws_instance" "jenkins" {
   instance_type = "t3.medium"
   subnet_id = var.private_subnet_id
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
+  iam_instance_profile = aws_iam_instance_profile.jenkins_ssm_profile.name
+
+  tags = {
+    Name = "DevOps-Project-Jenkins-Server"
+  }
 }

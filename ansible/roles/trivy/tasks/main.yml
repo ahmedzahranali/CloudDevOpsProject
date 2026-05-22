@@ -1,0 +1,24 @@
+---
+- name: Install dependencies for docker
+  apt:
+    name:
+      - wget
+      - apt-transport-https
+      - gnupg
+    state: present
+
+- name: Download Trivy GPG key
+  get_url:
+    url: https://aquasecurity.github.io/trivy-repo/deb/public.key
+    dest: /usr/share/keyrings/trivy-keyring.asc
+
+- name: Add Trivy apt repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/trivy-keyring.asc] https://aquasecurity.github.io/trivy-repo/deb {{ ansible_distribution_release }} main"
+    state: present
+
+- name: Install Trivy
+  apt:
+    name: trivy
+    state: present
+    update_cache: yes

@@ -1,0 +1,10 @@
+---
+- name: Configure Jenkins Server
+  hosts: tag_Name_DevOps_Project_Jenkins_Server
+  become: yes
+
+  roles:
+    - java
+    - jenkins
+    - docker
+    - trivy
