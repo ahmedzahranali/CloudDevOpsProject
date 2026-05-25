@@ -54,3 +54,18 @@ Navigate to the Terraform directory, initialize the S3 backend, and apply the mo
 ```bash
 terraform init
 terraform apply -auto-approve
+
+### Step 2: Configure the Jenkins Server
+Navigate to the Ansible directory and execute the configuration playbook using the AWS dynamic inventory.
+
+```bash
+ansible-playbook -i inventory/aws_ec2.yml playbook.yml
+
+### Step 3: Initialize the CI Pipeline
+Access the fully configured Jenkins UI. Create a new Pipeline project pointing to the `Jenkinsfile` in this repository to automate the build, test, and push cycles.
+
+### Step 4: Deploy the GitOps Controller
+Apply the ArgoCD Custom Resource manifest to your EKS cluster. ArgoCD will immediately pull the manifests from the `k8s/` directory and deploy the `ivolve` namespace, application replicas, Service, and Ingress.
+
+```bash
+kubectl apply -f argocd/application.yaml
