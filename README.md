@@ -51,17 +51,18 @@ This project demonstrates a production-ready, automated cloud architecture on AW
 
 ### Step 1: Provision Infrastructure
 Navigate to the Terraform directory, initialize the S3 backend, and apply the modules to create the VPC, EKS cluster, ECR repository, and EC2 instance.
+
 ```bash
 terraform init
 terraform apply -auto-approve
-```bash
+```
 
 ### Step 2: Configure the Jenkins Server
 Navigate to the Ansible directory and execute the configuration playbook using the AWS dynamic inventory.
 
 ```bash
 ansible-playbook -i inventory/aws_ec2.yml playbook.yml
-```bash
+```
 
 ### Step 3: Initialize the CI Pipeline
 Access the fully configured Jenkins UI. Create a new Pipeline project pointing to the `Jenkinsfile` in this repository to automate the build, test, and push cycles.
@@ -71,4 +72,4 @@ Apply the ArgoCD Custom Resource manifest to your EKS cluster. ArgoCD will immed
 
 ```bash
 kubectl apply -f argocd/application.yaml
-```bash
+```
